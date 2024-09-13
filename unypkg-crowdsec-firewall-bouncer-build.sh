@@ -56,6 +56,8 @@ make vendor
 rm -fv vendor.tgz
 cd /uny/sources || exit
 
+keep_git_dir=yes
+
 archiving_source
 
 ######################################################################################################################
