@@ -35,7 +35,7 @@ mkdir -pv /uny/sources
 cd /uny/sources || exit
 
 pkgname="crowdsec-firewall-bouncer"
-pkggit="https://github.com/crowdsec-firewall-bouncer/crowdsec-firewall-bouncer.git refs/tags/*"
+pkggit="https://github.com/crowdsecurity/cs-firewall-bouncer.git refs/tags/*"
 gitdepth="--depth=1"
 
 ### Get version info from git remote
@@ -51,9 +51,10 @@ echo "newer" >release-"$pkgname"
 
 git_clone_source_repo
 
-#cd "$pkg_git_repo_dir" || exit
-#./autogen.sh
-#cd /uny/sources || exit
+cd "$pkg_git_repo_dir" || exit
+make vendor
+rm -fv vendor.tgz
+cd /uny/sources || exit
 
 archiving_source
 
@@ -75,14 +76,13 @@ get_include_paths
 ####################################################
 ### Start of individual build script
 
-unset LD_RUN_PATH
+#unset LD_RUN_PATH
 
-./configure \
-    --prefix=/uny/pkg/"$pkgname"/"$pkgver"
+make BUILD_VERSION=v"$pkgver" release
 
-make -j"$(nproc)"
-make -j"$(nproc)" check 
-make -j"$(nproc)" install
+tar xzvf crowdsec-firewall-bouncer.tgz
+mkdir -pv /uny/pkg/"$pkgname"/"$pkgver"
+cp -a crowdsec-firewall-bouncer-v*/* /uny/pkg/"$pkgname"/"$pkgver"/
 
 ####################################################
 ### End of individual build script
