@@ -82,9 +82,11 @@ get_include_paths
 
 make BUILD_VERSION=v"$pkgver" release
 
-tar xzvf crowdsec-firewall-bouncer.tgz
+tar xzvf "$pkgname".tgz
 mkdir -pv /uny/pkg/"$pkgname"/"$pkgver"
-cp -a crowdsec-firewall-bouncer-v*/* /uny/pkg/"$pkgname"/"$pkgver"/
+mkdir -pv "$pkgname"/bin
+mv -v "$pkgname"/"$pkgname" "$pkgname"/bin
+cp -a "$pkgname"-v*/* /uny/pkg/"$pkgname"/"$pkgver"/
 
 ####################################################
 ### End of individual build script
