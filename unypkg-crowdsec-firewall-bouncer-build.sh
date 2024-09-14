@@ -84,8 +84,8 @@ make BUILD_VERSION=v"$pkgver" release
 
 tar xzvf "$pkgname".tgz
 mkdir -pv /uny/pkg/"$pkgname"/"$pkgver"
-mkdir -pv "$pkgname"/bin
-mv -v "$pkgname"/"$pkgname" "$pkgname"/bin
+mkdir -pv "$pkgname"-v*/bin
+mv -v "$pkgname"-v*/"$pkgname" "$pkgname"/bin
 cp -a "$pkgname"-v*/* /uny/pkg/"$pkgname"/"$pkgver"/
 
 ####################################################
