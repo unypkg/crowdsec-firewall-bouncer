@@ -65,7 +65,7 @@ archiving_source
 
 # unyc - run commands in uny's chroot environment
 # shellcheck disable=SC2154
-unyc <<"UNYEOF"
+unyc #<<"UNYEOF"
 set -vx
 source /uny/git/unypkg/fn
 
@@ -84,9 +84,12 @@ make BUILD_VERSION=v"$pkgver" release
 
 tar xzvf "$pkgname".tgz
 mkdir -pv /uny/pkg/"$pkgname"/"$pkgver"
-mkdir -pv "$pkgname"-v*/bin
-mv -v "$pkgname"-v*/"$pkgname" "$pkgname"/bin
-cp -a "$pkgname"-v*/* /uny/pkg/"$pkgname"/"$pkgver"/
+
+# shellcheck disable=SC2206
+dir=(${pkgname}-v*)
+mkdir -pv "${dir[0]}"/bin
+mv -v "${dir[0]}"/"$pkgname" "${dir[0]}"/bin/
+cp -a "${dir[0]}"/* /uny/pkg/"$pkgname"/"$pkgver"/
 
 ####################################################
 ### End of individual build script

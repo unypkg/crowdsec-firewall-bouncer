@@ -47,19 +47,6 @@ CONFIG_DIR="/etc/uny/crowdsec/bouncers"
 SERVICE="$BOUNCER_NAME.service"
 SYSTEMD_PATH_FILE="/etc/systemd/system/uny-$SERVICE"
 CSCLI_BIN=(/uny/pkg/crowdsec/*/bin/cscli)
-BIN_PATH_INSTALLED="$unypkg_root_dir/bin/$BOUNCER"
-
-if [ ! -f ./"$BOUNCER_NAME" ]; then
-    echo "Bouncer binary not found. Exiting."
-    exit 1
-fi
-
-if [ -e "$BIN_PATH_INSTALLED" ]; then
-    echo "$BIN_PATH_INSTALLED is already installed. Exiting"
-    exit 1
-fi
-
-install -v -m 0755 -D ./"$BOUNCER_NAME" "$BIN_PATH_INSTALLED"
 
 [[ -d ${CONFIG_DIR} ]] || mkdir -pv ${CONFIG_DIR}
 if [[ ! -s ${CONFIG_DIR}/${BOUNCER_NAME}.yaml ]]; then
