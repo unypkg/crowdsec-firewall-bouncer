@@ -68,9 +68,17 @@ if [[ ! -s ${CONFIG_DIR}/${BOUNCER_NAME}.yaml ]]; then
     # shellcheck disable=SC2016
     API_KEY=${API_KEY} BACKEND=${FW_BACKEND} envsubst '$API_KEY $BACKEND' <config/"$BOUNCER_NAME".yaml |
         install -D -m 0600 /dev/stdin "$CONFIG_DIR"/"$BOUNCER_NAME".yaml
+
+    command -v cscli >/dev/null || echo "Install crowdsec first please." && exit
+    # the following will fail with a non-LAPI local crowdsec, leaving empty port
+    port=$(cscli config show -oraw --key "Config.API.Server.ListenURI" 2>/dev/null | cut -d ":" -f2 || true)
+    if [ "$port" != "" ]; then
+        sed -i "s/localhost:8080/127.0.0.1:$port/g" "$CONFIG_DIR"/"$BOUNCER_NAME".yaml
+        sed -i "s/127.0.0.1:8080/127.0.0.1:$port/g" "$CONFIG_DIR"/"$BOUNCER_NAME".yaml
+    fi
 fi
 
-sed -r "s|=/bin/(.*)|=/usr/bin/env bash -c \"\1\"|" -i config/crowdsec.service
+#sed -r "s|=/bin/(.*)|=/usr/bin/env bash -c \"\1\"|" -i config/crowdsec.service
 CFG=${CONFIG_DIR} BIN="$unypkg_root_dir/bin/$BOUNCER_NAME" envsubst '$CFG $BIN' <"config/$SERVICE" >"$SYSTEMD_PATH_FILE"
 #sed "s|.*Alias=.*||g" -i /etc/systemd/system/uny-mariadb.service
 sed -e '/\[Install\]/a\' -e "Alias=$SERVICE" -i "$SYSTEMD_PATH_FILE"
