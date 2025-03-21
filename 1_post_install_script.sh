@@ -59,7 +59,7 @@ if [[ ! -s ${CONFIG_DIR}/${BOUNCER_NAME}.yaml ]]; then
         echo "$bouncer_id" >"$CONFIG_DIR"/"$BOUNCER_NAME".id
         echo "API Key: $API_KEY"
 
-        port=$(cscli config show -oraw --key "Config.API.Server.ListenURI" 2>/dev/null | cut -d ":" -f2 || true)
+        port=$("${CSCLI_BIN[0]}" config show -oraw --key "Config.API.Server.ListenURI" 2>/dev/null | cut -d ":" -f2 || true)
 
         READY="yes"
     else
